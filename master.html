@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<body>
+<h2>GM管理画面</h2>
+<ul id="list"></ul>
+
+
+<script type="module">
+import { db } from './firebase.js';
+import { ref, onValue, set } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const list = document.getElementById("list");
+
+window.setQuestion = () => {
+  set(ref(db, "quiz"), {
+    question: document.getElementById("q").value,
+    time: Date.now()
+  });
+};
+
+onValue(ref(db, "answers"), snap => {
+  list.innerHTML = "";
+  snap.forEach(c => {
+    const d = c.val();
+    list.innerHTML += `<li>${d.name}：${d.answer}</li>`;
+  });
+});
+</script>
+
+</body>
+</html>
