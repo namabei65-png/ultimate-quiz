@@ -65,7 +65,18 @@ button:hover {
 }
 </style>
 </head>
+  
+<div class="container">
 
+<h2 id="question">問題待ち…</h2>
+
+<input id="name" placeholder="名前">
+<input id="answer" placeholder="回答">
+
+<button onclick="send()">送信</button>
+
+</div>
+  
 <script type="module">
 import { db } from './firebase.js';
 import { ref, set } from
