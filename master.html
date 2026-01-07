@@ -1,68 +1,60 @@
 <!DOCTYPE html>
-h2 { text-align: center; }
-input, button {
-padding: 10px;
-border-radius: 8px;
-border: none;
-font-size: 15px;
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GM管理</title>
+<style>
+body{
+margin:0;font-family:sans-serif;background:#0f1020;color:#fff
 }
-input { width: calc(100% - 120px); }
-button {
-background: #4f7cff;
-color: white;
-cursor: pointer;
+.wrapper{max-width:900px;margin:40px auto;padding:20px}
+.panel{
+background:#1c1c2b;border-radius:18px;padding:24px;margin-bottom:20px
 }
-button:hover { background: #3b64e0; }
-.card {
-background: #2a2a40;
-padding: 12px;
-border-radius: 10px;
-margin-top: 10px;
+h2{text-align:center}
+input,button{
+padding:10px;border-radius:10px;border:none;font-size:15px
 }
-.header {
-display: flex;
-gap: 10px;
-margin-bottom: 20px;
-}
+input{width:70%}
+button{background:#ff6b6b;color:#fff;cursor:pointer}
+button:hover{background:#e55a5a}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{background:#2a2a40;padding:12px;border-radius:10px}
 </style>
 </head>
 <body>
-<div class="container">
-<h2>GM管理画面</h2>
-<div class="header">
-<input id="q" placeholder="次の問題を入力">
-<button onclick="setQuestion()">出題</button>
+<div class="wrapper">
+<div class="panel">
+<h2>問題出題</h2>
+<input id="q" placeholder="問題文">
+<button onclick="setQuestion()">出題（回答リセット）</button>
 </div>
-<div id="list"></div>
+
+
+<div class="panel">
+<h2>回答一覧</h2>
+<div id="list" class="list"></div>
+</div>
 </div>
 
 
 <script type="module">
 import { db } from './firebase.js';
-import { ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 
-const list = document.getElementById("list");
-
-
-window.setQuestion = () => {
-const text = document.getElementById("q").value;
-set(ref(db, "quiz"), {
-question: text,
-time: Date.now()
-});
+window.setQuestion=()=>{
+set(ref(db,"quiz"),{question:q.value,time:Date.now()});
+set(ref(db,"answers"),null);
 };
 
 
-onValue(ref(db, "answers"), snap => {
-list.innerHTML = "";
-snap.forEach(c => {
-const d = c.val();
-list.innerHTML += `
-<div class="card">
-<strong>${d.name}</strong><br>
-${d.answer}
-</div>`;
+onValue(ref(db,"answers"),snap=>{
+list.innerHTML="";
+snap.forEach(c=>{
+const d=c.val();
+list.innerHTML+=`<div class="card"><b>${d.name}</b><br>${d.answer}</div>`;
 });
 });
 </script>
